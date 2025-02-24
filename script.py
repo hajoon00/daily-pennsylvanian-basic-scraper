@@ -26,23 +26,22 @@ def scrape_data_point():
     req = requests.get("https://www.thedp.com", headers=headers)
     loguru.logger.info(f"Request URL: {req.url}")
     loguru.logger.info(f"Request status code: {req.status_code}")
-
+    
     if req.ok:
         soup = bs4.BeautifulSoup(req.text, "html.parser")
-        popular_section = soup.find("div", id="popular-utb")
         
-        if popular_section:
-            # Find link with all three classes
-            target_element = popular_section.find("a", class_=["frontpage-link", "small-link", "pub-link"])
-            
-            if target_element:
-                data_point = {
-                    "title": target_element.text.strip(),
-                    "url": target_element.get("href", "")
-                }
-                loguru.logger.info(f"Data point: {data_point}")
-                return data_point
-        return None
+    # CHANGED: Updated target element selection
+    popular_section = soup.find("div", id="popular-utb")
+    target_element = popular_section.find("a", class_=["frontpage-link", "small-link", "pub-link"])
+
+    data_point = {
+        "title": target_element.text.strip(),
+        "url": target_element.get("href", "")
+    }
+    loguru.logger.info(f"Data point: {data_point}")
+    return data_point
+        
+
 
 if __name__ == "__main__":
 

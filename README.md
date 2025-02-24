@@ -141,9 +141,9 @@ But it is important to use it responsibly and ethically. Here are some guideline
 1. Updated the scraping target from .find("a", class\_="frontpage-link") to .find("div", id="popular-utb") to correctly target the popular articles section
 2. Modified link selection to match the specific classes "frontpage-link small-link pub-link" that identify article links
 3. Enhanced data collection to capture both article titles and their corresponding URLs that link users to external website, since Under The Button has their own website.
-4. Added error handling to ensure the scraper continues working even if the popular-utb section isn't found
-5. Updated the data storage format to accommodate both title and URL information
-6. Added logging for the new data structure to help with debugging
-
+4. Updated the data storage format to accommodate both title and URL information
+5. Added logging for the new data structure to help with debugging
 
 ## Schedule Explanation
+
+The initial cron expression 0 3 \* \* \* means my job runs at 3:00 AM UTC every day. The five fields are minute, hour, day of month, month, and day of week. The time is UTC so you should calculate the time difference from where you live.
