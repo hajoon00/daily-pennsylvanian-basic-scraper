@@ -15,38 +15,37 @@ import loguru
 
 def scrape_data_point():
     """
-    Scrapes the main headline from The Daily Pennsylvanian home page.
+    Scrapes headlines from Under the Button website.
 
     Returns:
-        str: The headline text if found, otherwise an empty string.
+        dict: Dictionary containing the headline text and URL if found, otherwise an empty string.
     """
     headers = {
         "User-Agent": "cis3500-scraper"
     }
-    req = requests.get("https://www.thedp.com", headers=headers)
+    req = requests.get("https://underthebutton.com", headers=headers)
     loguru.logger.info(f"Request URL: {req.url}")
-    loguru.logger.info(f"Request status code: {req.status_code}")
-
-    # if req.ok:
-    #     soup = bs4.BeautifulSoup(req.text, "html.parser")
-    #     target_element = soup.find("a", class_="frontpage-link")
-    #     data_point = "" if target_element is None else target_element.text
-    #     loguru.logger.info(f"Data point: {data_point}")
-    #     return data_point
+    loguru.logger.info(f"Request status_code: {req.status_code}")
 
     if req.ok:
         soup = bs4.BeautifulSoup(req.text, "html.parser")
         
-    # CHANGED: Updated target element selection
-    popular_section = soup.find("div", id="popular-utb")
-    target_element = popular_section.find("a", class_=["frontpage-link", "small-link", "pub-link"])
+        # Find the popular-utb section
+        popular_section = soup.find("div", id="popular-utb")
+        if popular_section:
+            # Find all headline links in the popular section
+            headlines = popular_section.find_all("a", class_=["frontpage-link", "small-link", "pub-link"])
+            
+            # Get the first headline's info
+            if headlines:
+                data_point = {
+                    "title": headlines[0].text.strip(),
+                    "url": headlines[0].get("href", "")
+                }
+                loguru.logger.info(f"Data point: {data_point}")
+                return data_point
 
-    data_point = "" if target_element is None else {
-            "title": target_element.text,
-            "url": target_element.get("href", "")
-        }
-    loguru.logger.info(f"Data point: {data_point}")
-    return data_point
+    return ""
         
 
 
