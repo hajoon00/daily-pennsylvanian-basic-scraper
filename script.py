@@ -15,10 +15,10 @@ import loguru
 
 def scrape_data_point():
     """
-    Scrapes headlines from The Daily Pennsylvanian website's Under the Button section.
+    Scrapes all headlines from The Daily Pennsylvanian website's Under the Button section.
 
     Returns:
-        dict: Dictionary containing the headline text and URL if found, otherwise an empty string.
+        list: List of dictionaries containing headline text and URL for each article.
     """
     headers = {
         "User-Agent": "cis3500-scraper"
@@ -35,17 +35,27 @@ def scrape_data_point():
         if popular_utb is None:
             loguru.logger.warning("Could not find popular-utb section")
             return "popular-utb section not found"
-            
-        # Find the first link in the UTB section
-        target_element = popular_utb.find("a", class_="frontpage-link")
-        data_point = "no target element found" if target_element is None else {
-            "title": target_element.text.strip(),
-            "url": target_element.get("href", "")
-        }
-        loguru.logger.info(f"Data point: {data_point}")
-        return data_point
+        
 
-    
+        small_soup = bs4.BeautifulSoup(popular_utb.text, "html.parser");
+        # Find all links in the UTB section
+        target_elements = small_soup.find_all("a", class_="frontpage-link")
+        if not target_elements:  # If list is empty
+            return "no target element found"
+            
+        # Get data from all elements
+        data_points = []
+        for element in target_elements:
+            data_point = {
+                "title": element.text.strip(),
+                "url": element.get("href", "")
+            }
+            data_points.append(data_point)
+            
+        loguru.logger.info(f"Data points: {data_points}")
+        return data_points
+
+    return ""
 
 
 if __name__ == "__main__":
@@ -70,14 +80,15 @@ if __name__ == "__main__":
     # Run scrape
     loguru.logger.info("Starting scrape")
     try:
-        data_point = scrape_data_point()
+        data_points = scrape_data_point()
     except Exception as e:
-        loguru.logger.error(f"Failed to scrape data point: {e}")
-        data_point = None
+        loguru.logger.error(f"Failed to scrape data points: {e}")
+        data_points = None
 
     # Save data
-    if data_point is not None:
-        dem.add_today(data_point)
+    if data_points is not None:
+        for data_point in data_points:
+            dem.add_today(data_point)
         dem.save()
         loguru.logger.info("Saved daily event monitor")
 
