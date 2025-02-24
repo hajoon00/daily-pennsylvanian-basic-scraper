@@ -38,7 +38,7 @@ def scrape_data_point():
             
         # Find the first link in the UTB section
         target_element = popular_utb.find("a", class_="frontpage-link")
-        data_point = "" if target_element is None else {
+        data_point = "no target element found" if target_element is None else {
             "title": target_element.text.strip(),
             "url": target_element.get("href", "")
         }
