@@ -34,7 +34,7 @@ def scrape_data_point():
         popular_utb = soup.find("div", id="popular-utb")
         if popular_utb is None:
             loguru.logger.warning("Could not find popular-utb section")
-            return ""
+            return "popular-utb section not found"
             
         # Find the first link in the UTB section
         target_element = popular_utb.find("a", class_="frontpage-link")
