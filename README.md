@@ -144,3 +144,6 @@ But it is important to use it responsibly and ethically. Here are some guideline
 4. Added error handling to ensure the scraper continues working even if the popular-utb section isn't found
 5. Updated the data storage format to accommodate both title and URL information
 6. Added logging for the new data structure to help with debugging
+
+
+## Schedule Explanation
