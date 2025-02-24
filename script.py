@@ -15,10 +15,10 @@ import loguru
 
 def scrape_data_point():
     """
-    Scrapes all headlines from The Daily Pennsylvanian website's Under the Button section.
+    Scrapes headlines from The Daily Pennsylvanian website's Under the Button section.
 
     Returns:
-        list: List of dictionaries containing headline text and URL for each article.
+        dict: Dictionary containing the headline text and URL if found, otherwise an empty string.
     """
     headers = {
         "User-Agent": "cis3500-scraper"
@@ -31,28 +31,28 @@ def scrape_data_point():
         soup = bs4.BeautifulSoup(req.text, "html.parser")
         
         # First find the UTB section
-        popular_utb = soup.find("div", id="popular-utb")
-        if popular_utb is None:
-            loguru.logger.warning("Could not find popular-utb section")
-            return "popular-utb section not found"
+        target_element = soup.find("div", id="popular-utb")
+        data_point = "" if target_element is None else target_element.text
+        loguru.logger.info(f"Data point: {data_point}")
+        return data_point
         
 
-        small_soup = bs4.BeautifulSoup(popular_utb.text, "html.parser");
-        # Find all links in the UTB section
-        target_elements = small_soup.find_all("a", class_="frontpage-link")
-        if not target_elements:  # If list is empty
-            return "no target element found"
+        # small_soup = bs4.BeautifulSoup(popular_utb.text, "html.parser");
+        # # Find all links in the UTB section
+        # target_elements = small_soup.find_all("a", class_="frontpage-link")
+        # if not target_elements:  # If list is empty
+        #     return "no target element found"
             
-        # Get data from all elements
-        data_points = []
-        for element in target_elements:
-            data_point = {
-                "title": element.text.strip(),
-                "url": element.get("href", "")
-            }
-            data_points.append(data_point)
+        # # Get data from all elements
+        # data_points = []
+        # for element in target_elements:
+        #     data_point = {
+        #         "title": element.text.strip(),
+        #         "url": element.get("href", "")
+        #     }
+        #     data_points.append(data_point)
             
-        loguru.logger.info(f"Data points: {data_points}")
+        # loguru.logger.info(f"Data points: {data_points}")
         return data_points
 
     return ""
@@ -80,15 +80,14 @@ if __name__ == "__main__":
     # Run scrape
     loguru.logger.info("Starting scrape")
     try:
-        data_points = scrape_data_point()
+        data_point = scrape_data_point()
     except Exception as e:
-        loguru.logger.error(f"Failed to scrape data points: {e}")
-        data_points = None
+        loguru.logger.error(f"Failed to scrape data point: {e}")
+        data_point = None
 
     # Save data
-    if data_points is not None:
-        for data_point in data_points:
-            dem.add_today(data_point)
+    if data_point is not None:
+        dem.add_today(data_point)
         dem.save()
         loguru.logger.info("Saved daily event monitor")
 
