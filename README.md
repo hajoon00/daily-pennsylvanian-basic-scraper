@@ -37,7 +37,7 @@ The main libraries used are:
 - [`bs4`](https://www.crummy.com/software/BeautifulSoup/) - BeautifulSoup for parsing HTML
 - [`requests`](https://requests.readthedocs.io/en/latest/) - Making HTTP requests to scrape web pages
 - [`loguru`](https://github.com/Delgan/loguru) - Logging errors and run info
-- [`pytz`](https://github.com/stub42/pytz) - Handling datetimes and timezones  
+- [`pytz`](https://github.com/stub42/pytz) - Handling datetimes and timezones
 - [`waybackpy`](https://github.com/akamhy/waybackpy/) - Scraping web archives (optional)
 
 ## Getting Started
@@ -130,8 +130,17 @@ But it is important to use it responsibly and ethically. Here are some guideline
 
 7. Assess if decisions made using the data could contribute to bias, discrimination or unfair profiling.
 
-8. Validate quality of scraped data, and recognize limitations in ensuring relevance and accuracy inherent with web data.  
+8. Validate quality of scraped data, and recognize limitations in ensuring relevance and accuracy inherent with web data.
 
 9. Document your scraping process thoroughly for replicability, transparency and accountability.
 
 10. Continuously re-evaluate your scraping program against applicable laws and ethical principles.
+
+## Changes I made use this template
+
+1. Updated the scraping target from .find("a", class\_="frontpage-link") to .find("div", id="popular-utb") to correctly target the popular articles section
+2. Modified link selection to match the specific classes "frontpage-link small-link pub-link" that identify article links
+3. Enhanced data collection to capture both article titles and their corresponding URLs that link users to external website, since Under The Button has their own website.
+4. Added error handling to ensure the scraper continues working even if the popular-utb section isn't found
+5. Updated the data storage format to accommodate both title and URL information
+6. Added logging for the new data structure to help with debugging

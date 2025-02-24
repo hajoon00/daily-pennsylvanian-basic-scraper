@@ -15,10 +15,10 @@ import loguru
 
 def scrape_data_point():
     """
-    Scrapes the main headline from The Daily Pennsylvanian home page.
+    Scrapes headlines and URLs from the popular under the button articles section.
 
     Returns:
-        str: The headline text if found, otherwise an empty string.
+        dict: Dictionary containing the headline text and URL if found, otherwise None
     """
     headers = {
         "User-Agent": "cis3500-scraper"
@@ -29,11 +29,20 @@ def scrape_data_point():
 
     if req.ok:
         soup = bs4.BeautifulSoup(req.text, "html.parser")
-        target_element = soup.find("a", class_="frontpage-link")
-        data_point = "" if target_element is None else target_element.text
-        loguru.logger.info(f"Data point: {data_point}")
-        return data_point
-
+        popular_section = soup.find("div", id="popular-utb")
+        
+        if popular_section:
+            # Find link with all three classes
+            target_element = popular_section.find("a", class_=["frontpage-link", "small-link", "pub-link"])
+            
+            if target_element:
+                data_point = {
+                    "title": target_element.text.strip(),
+                    "url": target_element.get("href", "")
+                }
+                loguru.logger.info(f"Data point: {data_point}")
+                return data_point
+        return None
 
 if __name__ == "__main__":
 
