@@ -41,8 +41,7 @@ def scrape_data_point():
     popular_section = soup.find("div", id="popular-utb")
     target_element = popular_section.find("a", class_=["frontpage-link", "small-link", "pub-link"])
 
-    data_point = ""
-    if target_element is not None else {
+    data_point = "" if target_element is None else {
             "title": target_element.text,
             "url": target_element.get("href", "")
         }
