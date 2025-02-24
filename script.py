@@ -23,27 +23,39 @@ def scrape_data_point():
     headers = {
         "User-Agent": "cis3500-scraper"
     }
-    req = requests.get("https://underthebutton.com", headers=headers)
+    req = requests.get("https://www.thedp.com", headers=headers)
     loguru.logger.info(f"Request URL: {req.url}")
     loguru.logger.info(f"Request status_code: {req.status_code}")
+    loguru.logger.info(f"Response content length: {len(req.text)}")  # Debug line
 
     if req.ok:
         soup = bs4.BeautifulSoup(req.text, "html.parser")
         
-        # Find the popular-utb section
-        popular_section = soup.find("div", id="popular-utb")
-        if popular_section:
-            # Find all headline links in the popular section
-            headlines = popular_section.find_all("a", class_=["frontpage-link", "small-link", "pub-link"])
+        # Debug - print the entire HTML to the log
+        loguru.logger.debug(f"HTML content: {soup.prettify()}")
+        
+        # Find the section-pub div first
+        section_pub = soup.find("div", class_="section-pub")
+        loguru.logger.info(f"Found section-pub: {section_pub is not None}")
+        
+        if section_pub:
+            # Find the popular-utb div
+            popular_utb = section_pub.find("div", id="popular-utb")
+            loguru.logger.info(f"Found popular-utb: {popular_utb is not None}")
             
-            # Get the first headline's info
-            if headlines:
-                data_point = {
-                    "title": headlines[0].text.strip(),
-                    "url": headlines[0].get("href", "")
-                }
-                loguru.logger.info(f"Data point: {data_point}")
-                return data_point
+            if popular_utb:
+                # Find all frontpage-link elements
+                links = popular_utb.find_all("a", class_="frontpage-link")
+                loguru.logger.info(f"Found {len(links)} links")
+                
+                if links:
+                    # Get the first link's info
+                    data_point = {
+                        "title": links[0].text.strip(),
+                        "url": links[0].get("href", "")
+                    }
+                    loguru.logger.info(f"Data point: {data_point}")
+                    return data_point
 
     return ""
         
