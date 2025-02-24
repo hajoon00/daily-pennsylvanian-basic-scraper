@@ -54,7 +54,7 @@ if __name__ == "__main__":
     try:
         os.makedirs("data", exist_ok=True)
     except Exception as e:
-        loguru.logger.error(f"Failed to create data directory: {e}")
+        loguru.logger.error("Failed to create data directory: {e}")
         sys.exit(1)
 
     # Load daily event monitor
