@@ -32,7 +32,7 @@ def scrape_data_point():
         
         # First find the UTB section
         target_element = soup.find_all("a", class_="frontpage-link small-link pub-link")
-        data_point = "" if target_element is None else target_element.text
+        data_point = "no target element found" if target_element is None else target_element.text
         loguru.logger.info(f"Data point: {data_point}")
         return data_point
         
