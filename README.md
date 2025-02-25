@@ -138,11 +138,10 @@ But it is important to use it responsibly and ethically. Here are some guideline
 
 ## Changes I made use this template
 
-1. Updated the scraping target from .find("a", class\_="frontpage-link") to .find("div", id="popular-utb") to correctly target the popular articles section
-2. Modified link selection to match the specific classes "frontpage-link small-link pub-link" that identify article links
-3. Enhanced data collection to capture both article titles and their corresponding URLs that link users to external website, since Under The Button has their own website.
-4. Updated the data storage format to accommodate both title and URL information
-5. Added logging for the new data structure to help with debugging
+1. Changed the URL to "https://www.thedp.com/section/editorials" to target the editorials section
+2. Updated the target element to find the first link with class "standard-link"
+3. Modified the output JSON filename to "dp_editorial_headlines.json" to reflect the new content
+4. Maintained the dictionary structure to store both title and URL
 
 ## Schedule Explanation
 

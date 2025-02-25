@@ -23,43 +23,17 @@ def scrape_data_point():
     headers = {
         "User-Agent": "cis3500-scraper"
     }
-    req = requests.get("https://www.thedp.com", headers=headers)
+    req = requests.get("https://www.thedp.com/section/editorials", headers=headers)
     loguru.logger.info(f"Request URL: {req.url}")
     loguru.logger.info(f"Request status_code: {req.status_code}")
 
     if req.ok:
-        # soup = bs4.BeautifulSoup(req.text, "html.parser")
-        # target_element = soup.find("a", class_="frontpage-link")
-        # data_point = "no target element found" if target_element is None else target_element.text
-        # loguru.logger.info(f"Data point: {data_point}")
-        # return data_point
 
         soup = bs4.BeautifulSoup(req.text, "html.parser")
-        target_element = soup.find("a", class_="frontpage-link")
+        target_element = soup.find("h3", class_="standard-link")
         data_point = "" if target_element is None else target_element.text
         loguru.logger.info(f"Data point: {data_point}")
         return data_point
-        
-
-        # small_soup = bs4.BeautifulSoup(popular_utb.text, "html.parser");
-        # # Find all links in the UTB section
-        # target_elements = small_soup.find_all("a", class_="frontpage-link")
-        # if not target_elements:  # If list is empty
-        #     return "no target element found"
-            
-        # # Get data from all elements
-        # data_points = []
-        # for element in target_elements:
-        #     data_point = {
-        #         "title": element.text.strip(),
-        #         "url": element.get("href", "")
-        #     }
-        #     data_points.append(data_point)
-            
-        # loguru.logger.info(f"Data points: {data_points}")
-        return data_points
-
-    return ""
 
 
 if __name__ == "__main__":
@@ -78,7 +52,7 @@ if __name__ == "__main__":
     # Load daily event monitor
     loguru.logger.info("Loading daily event monitor")
     dem = daily_event_monitor.DailyEventMonitor(
-        "data/daily_pennsylvanian_headlines.json"
+        "data/dp_editorial_headlines.json"
     )
 
     # Run scrape
