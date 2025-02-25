@@ -28,11 +28,15 @@ def scrape_data_point():
     loguru.logger.info(f"Request status_code: {req.status_code}")
 
     if req.ok:
+        # soup = bs4.BeautifulSoup(req.text, "html.parser")
+        # target_element = soup.find("a", class_="frontpage-link")
+        # data_point = "no target element found" if target_element is None else target_element.text
+        # loguru.logger.info(f"Data point: {data_point}")
+        # return data_point
+
         soup = bs4.BeautifulSoup(req.text, "html.parser")
-        
-        # First find the UTB section
-        target_element = soup.find_all("a", class_="frontpage-link small-link pub-link")
-        data_point = "no target element found" if target_element is None else target_element.text
+        target_element = soup.find("a", class_="frontpage-link")
+        data_point = "" if target_element is None else target_element.text
         loguru.logger.info(f"Data point: {data_point}")
         return data_point
         
