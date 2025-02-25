@@ -31,7 +31,7 @@ def scrape_data_point():
         soup = bs4.BeautifulSoup(req.text, "html.parser")
         
         # First find the UTB section
-        target_element = soup.find("div", id="popular-utb")
+        target_element = soup.find("a", class="frontpage-link small-link pub-link")
         data_point = "" if target_element is None else target_element.text
         loguru.logger.info(f"Data point: {data_point}")
         return data_point
